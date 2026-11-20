@@ -95,7 +95,7 @@ runs:
     - name: Publish
       if: steps.set-build-status.outputs.build_status == 'Release Created'
       run: |
-        msbuild ${{ env.PROJECT_PATH }} /t:Build /p:Configuration=${{ inputs.configuration }} /p:OutputPath="${{ github.workspace }}"\publish
+        msbuild ${{ inputs.project-file-path }} /t:Build /p:Configuration=${{ inputs.configuration }} /p:OutputPath="${{ github.workspace }}"\publish
       shell: pwsh
         
     - name: Create Zip Release File
@@ -104,7 +104,7 @@ runs:
       run: |
         Write-Output "Creating Zip File..."
         New-Item -ItemType Directory -Path ./packages -Force
-        Set-Location -Path "${{ github.workspace }}\publish\_PublishedWebsites\${{ env.PROJECT_NAME }}"
+        Set-Location -Path "${{ github.workspace }}\publish\_PublishedWebsites\${{ inputs.project-name }}"
         Compress-Archive -Path ./* -DestinationPath "${{ github.workspace }}/packages/${{ steps.generate-zip-file-name.outputs.zip_file_name }}"
         $packageFilePath = "${{ github.workspace }}/packages/${{ steps.generate-zip-file-name.outputs.zip_file_name }}"
         Write-Output "Zip File Path:  $packageFilePath"
